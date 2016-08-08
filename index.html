@@ -9,6 +9,7 @@
           font-family: 'nunito' !important; 
           font-weight: 700;
           color: thistle;
+          margin-bottom: 0;
       }
 
     .links line {
@@ -48,12 +49,19 @@
       padding: 2px 8px;
       background-color: #9700bf;
     }
+    p.heading-caption {
+    }
+    p.source-text {
+      font-size: 1em;
+      margin-top: 2em;
+    }
 
     </style>
   <head>
 
 <body class='container'>
   <h2>Dolphin Social Network</h2>
+  <p class='heading-caption'>(click and drag nodes to better read names)</p>
   <svg width="960" height="600"></svg>
   <script src="./d3.js"></script>
   <script>
@@ -202,10 +210,14 @@
 
   </script>
   <img src="./dolphin-popularity-legend.png" />
-  <div class="legend-text">
+  <div class="legend-text clearfix">
     <div class="low-popularity">GREEN: LOW popularity </div>
     <div class="high-popularity">PURPLE: HIGH popularity </div>
   </div>
+  <p class='source-text'>
+    An undirected social network of frequent associations between 62 dolphins in a community living off Doubtful Sound, New Zealand.<br/>
+    (From <a href="https://networkdata.ics.uci.edu/data.php?id=6" target="blank">UCI Network Data Repository</a>)
+  </p>
 
 </body>
 </html>
