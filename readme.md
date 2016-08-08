@@ -1,6 +1,8 @@
 # Dolphin Social Network
 ## Homework for data viz course
 
+click to view: [https://syntacticsugar.github.io/dolphin-popularity-contest/]
+
 1. My data covers "an undirected social network of frequent associations between 62 dolphins in a community living off Doubtful Sound, New Zealand", from (https://networkdata.ics.uci.edu/data.php?id=6)  Why?  Because I love dolphins!
 1. I used all the data provided in 'dolphins.gml' from (http://networkdata.ics.uci.edu/data/dolphins/dolphins.gml)
 1. I'd like to point out that the **green** represents LOW popularity, **purple** represents HIGH popularity, and the gradient shades in the *middle* represent the dolphins in the middle of popularity spectrum.
