@@ -3,10 +3,12 @@
   <head>
     <title>Dolphin Social Network</title>
     <link rel="stylesheet" href="./bootstrap.css">
+    <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,300' rel='stylesheet' type='text/css'>
     <style>
       h1,h2,h3,h4,h5 { 
-          font-family: 'avenir next' !important; 
+          font-family: 'nunito' !important; 
           font-weight: 700;
+          color: thistle;
       }
 
     .links line {
@@ -14,9 +16,32 @@
       stroke-opacity: 0.9;
     }
 
-    .nodes circle {
-      stroke: #87cefa;
+    .node circle {
+      stroke: dimgray;
       stroke-width: 1.5px;
+    }
+    .node text {
+      display: none;
+      font: 18px sans-serif;
+    }
+
+    .node:hover circle {
+      fill: #000;
+    }
+
+    .node:hover text {
+      display: inline;
+      fill: thistle;
+      background: black;
+    }
+    span.legend-text {
+      position: relative;
+      font-size: 18px;
+      width: 100%;
+    }
+    span.low-popularity {
+    }
+    span.high-popularity {
     }
 
     </style>
@@ -24,7 +49,7 @@
 
 <body class='container'>
   <h2>Dolphin Social Network</h2>
-  <svg width="960" height="800"></svg>
+  <svg width="960" height="600"></svg>
   <script src="./d3.js"></script>
   <script>
 
@@ -32,18 +57,66 @@
       width = +svg.attr("width"),
       height = +svg.attr("height");
 
-  var color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(width / 3, height / 2.5));
+      .force("center", d3.forceCenter(width / 2, height / 1.8));
 
   d3.json("all_dolphin_data.json", function(error, graph) {
 
+
+    // hacky as hell, uses shared references and mutation
+
+    //var arrayOfNodes = []
+
     graph.nodes.forEach(function (node) {
-      node.group = Math.random() * 20;
+      //node.popularity = Math.random() * 20;
+      node.popularity = 0;
+      //arrayOfNodes[node.id] = node;
     });
+
+
+    graph.links.forEach(function (link) {
+      //arrayOfNodes[link.source].popularity++;
+      //arrayOfNodes[link.target].popularity++;
+      graph.nodes[link.source].popularity++;
+      graph.nodes[link.target].popularity++;
+    });
+
+    var maxPopularity = 0;
+    graph.nodes.forEach(function (node) {
+      if (node.popularity > maxPopularity) {
+        maxPopularity = node.popularity;
+      }
+    });
+    console.log(maxPopularity);
+
+    /*
+    var colorRaw = d3.scaleOrdinal(d3.schemeCategory20b);
+
+    var color = function (popularity) {
+      return colorRaw(20 * popularity/maxPopularity);
+    }
+    var color= d3.scaleOrdinal(d3.schemeCategory20b);
+    */
+
+    function color(p) {
+      switch(p) {
+        case 1 : return "#83E500";
+        case 2 : return "#84D011";
+        case 3 : return "#86BB22";
+        case 4 : return "#88A634";
+        case 5 : return "#8A9145";
+        case 6 : return "#8C7C56";
+        case 7 : return "#8D6868";
+        case 8 : return "#8F5379";
+        case 9 : return "#913E8A";
+        case 10: return "#93299C";
+        case 11: return "#9514AD";
+        case 12: return "#9700BF";
+      }
+    }
 
     if (error) throw error;
 
@@ -54,20 +127,33 @@
       .enter().append("line")
         .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
-    var node = svg.append("g")
-        .attr("class", "nodes")
-      .selectAll("circle")
+    var node = svg
+      //.append("g")
+      //.attr("class", "nodes")
+      //.selectAll("g")
+      .selectAll('.node')
       .data(graph.nodes)
-      .enter().append("circle")
-        .attr("r", 5)
-        .attr("fill", function(d) { return color(d.group); })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
+      .enter().append("g")
+      .attr("class", "node")
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended))
+      ;
 
+    var circle = node.append('circle')
+        .attr("r", 8)
+        .attr("fill", function(d) { return color(d.popularity); })
+        ;
+
+    var label = node.append("text")
+          .attr("dy", ".35em")
+          .text(function(d) { return d.label; });
+
+    /*
     node.append("title")
-        .text(function(d) { return d.id; });
+        .text(function(d) { return d.label; });
+     */
 
     simulation
         .nodes(graph.nodes)
@@ -83,9 +169,12 @@
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
-      node
+      circle
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
+      label
+          .attr("x", function(d) { return d.x + 15; })
+          .attr("y", function(d) { return d.y; });
     }
   });
 
@@ -107,5 +196,11 @@
   }
 
   </script>
+  <img src="./dolphin-popularity-legend.png" /><br/>
+  <span class="legend-text">
+    <span class="low-popularity">GREEN:</span> LOW popularity
+    <span class="high-popularity">PURPLE:</span> HIGH popularity
+  </span>
+
 </body>
 </html>
