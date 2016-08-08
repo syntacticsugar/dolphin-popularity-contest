@@ -34,14 +34,19 @@
       fill: thistle;
       background: black;
     }
-    span.legend-text {
-      position: relative;
+    div.legend-text {
       font-size: 18px;
-      width: 100%;
+      width: 840px;
     }
-    span.low-popularity {
+    div.low-popularity {
+      color: #83e500;
+      float: left;
     }
-    span.high-popularity {
+    div.high-popularity {
+      color: white;
+      float: right;
+      padding: 2px 8px;
+      background-color: #9700bf;
     }
 
     </style>
@@ -196,11 +201,11 @@
   }
 
   </script>
-  <img src="./dolphin-popularity-legend.png" /><br/>
-  <span class="legend-text">
-    <span class="low-popularity">GREEN:</span> LOW popularity
-    <span class="high-popularity">PURPLE:</span> HIGH popularity
-  </span>
+  <img src="./dolphin-popularity-legend.png" />
+  <div class="legend-text">
+    <div class="low-popularity">GREEN: LOW popularity </div>
+    <div class="high-popularity">PURPLE: HIGH popularity </div>
+  </div>
 
 </body>
 </html>
